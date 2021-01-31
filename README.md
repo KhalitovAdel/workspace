@@ -19,12 +19,4 @@ WORKSPACE_NAME=second docker-compose up -d workspace && sudo chown $(id -u):$(id
 
 GOTO: https://$(WORKSPACE_NAME).$(DEFAULT_HOST)
 
-You can rewrite all env:
-
-```
-CUID=1000
-CGID=1000
-WORKSPACE_NAME=default
-PASSWORD=Qwerty12345
-DEFAULT_HOST=workspace.adel.khalitov.monster
-```
+You can rewrite [all env dependency](https://github.com/KhalitovAdel/workspace/blob/master/.env)

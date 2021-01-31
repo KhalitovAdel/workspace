@@ -33,7 +33,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
   workspace:
-    image: codercom/code-server:latest
+    build: ./code-server
     container_name: workspace-${WORKSPACE_NAME}
     env_file:
       - .env
@@ -42,7 +42,7 @@ services:
       - VIRTUAL_HOST=${WORKSPACE_NAME}.${DEFAULT_HOST}
       - LETSENCRYPT_HOST=${WORKSPACE_NAME}.${DEFAULT_HOST}
       - PASSWORD=${PASSWORD}
-      - SHELL="/bin/bash"
+      - SHELL=/bin/bash
     expose:
       - '8080'
     restart: always

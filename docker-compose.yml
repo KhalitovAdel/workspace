@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    env_file:
+      - .env
+    environment:
+      - DEFAULT_HOST=${DEFAULT_HOST}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - /home/agenta228/vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-certs
+    env_file:
+      - .env
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+  workspace:
+    image: codercom/code-server:latest
+    container_name: workspace-${WORKSPACE_NAME}
+    env_file:
+      - .env
+    environment:
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=${WORKSPACE_NAME}.${DEFAULT_HOST}
+      - LETSENCRYPT_HOST=${WORKSPACE_NAME}.${DEFAULT_HOST}
+      - PASSWORD=${PASSWORD}
+      - SHELL="/bin/bash"
+    expose:
+      - '8080'
+    restart: always
+    volumes:
+      - ${HOME}/${WORKSPACE_NAME}/.config:/home/coder/.config
+      - ${HOME}/${WORKSPACE_NAME}/.ssh:/home/coder/.ssh
+      - ${HOME}/${WORKSPACE_NAME}/projects:/home/coder/project
+    user: "${CUID}:${CGID}"
+
+
+volumes:
+  conf:
+  vhost:
+  html:
+  dhparam:
+  certs:
+
+networks:
+  default:
+    driver: 'bridge'
+    name: 'domaingenerator'

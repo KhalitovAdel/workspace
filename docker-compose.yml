@@ -19,6 +19,8 @@ services:
       - certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: always
+    networks:
+      - domain
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     container_name: nginx-certs
@@ -32,6 +34,16 @@ services:
       - certs:/etc/nginx/certs:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
+    networks:
+      - domain
+  dind:
+    image: docker:dind
+    privileged: true
+    restart: always
+    volumes:
+    - dsock:/var/run/docker.sock
+    networks:
+      - dind
   workspace:
     build: ./code-server
     container_name: workspace-${WORKSPACE_NAME}
@@ -46,11 +58,17 @@ services:
     expose:
       - '8080'
     restart: always
+    volumes_from:
+      - dind
     volumes:
       - ${HOME}/${WORKSPACE_NAME}/.config:/home/coder/.config
       - ${HOME}/${WORKSPACE_NAME}/.ssh:/home/coder/.ssh
       - ${HOME}/${WORKSPACE_NAME}/projects:/home/coder/project
+      - dsock:/var/run/docker.sock
     user: "${CUID}:${CGID}"
+    networks:
+      - domain
+      - dind
 
 
 volumes:
@@ -59,8 +77,11 @@ volumes:
   html:
   dhparam:
   certs:
+  dsock:
 
 networks:
-  default:
+  domain:
     driver: 'bridge'
     name: 'domaingenerator'
+  dind:
+    driver: 'bridge'

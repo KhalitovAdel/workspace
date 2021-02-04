@@ -42,6 +42,7 @@ services:
     restart: always
     volumes:
     - dsock:/var/run/
+    - pdocker:/usr/local/bin/docker
     networks:
       - dind
   workspace:
@@ -65,6 +66,7 @@ services:
       - ${HOME}/${WORKSPACE_NAME}/.ssh:/home/coder/.ssh
       - ${HOME}/${WORKSPACE_NAME}/projects:/home/coder/project
       - dsock:/var/run/
+      - pdocker:/usr/local/bin/docker
     user: "${CUID}:${CGID}"
     networks:
       - domain
@@ -78,6 +80,7 @@ volumes:
   dhparam:
   certs:
   dsock:
+  pdocker:
 
 networks:
   domain:

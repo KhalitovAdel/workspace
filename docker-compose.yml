@@ -41,7 +41,7 @@ services:
     privileged: true
     restart: always
     volumes:
-    - dsock:/var/run/docker.sock
+    - dsock:/var/run/
     networks:
       - dind
   workspace:
@@ -64,7 +64,7 @@ services:
       - ${HOME}/${WORKSPACE_NAME}/.config:/home/coder/.config
       - ${HOME}/${WORKSPACE_NAME}/.ssh:/home/coder/.ssh
       - ${HOME}/${WORKSPACE_NAME}/projects:/home/coder/project
-      - dsock:/var/run/docker.sock
+      - dsock:/var/run/
     user: "${CUID}:${CGID}"
     networks:
       - domain

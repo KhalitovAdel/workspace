@@ -38,38 +38,43 @@ services:
       - domain
   dind:
     image: docker:dind
+    container_name: dind-${WORKSPACE_NAME}
     privileged: true
     restart: always
-    volumes:
-    - dsock:/var/run/
-    - pdocker:/usr/local/bin/docker
+    env_file:
+      - .env
+    environment: 
+      - DOCKER_TLS_CERTDIR=
     networks:
-      - dind
+      dind:
+        aliases: 
+          - dind-${WORKSPACE_NAME}
   workspace:
     build: ./code-server
     container_name: workspace-${WORKSPACE_NAME}
     env_file:
       - .env
+    ports: 
+      - '8080:8080'
     environment:
-      - VIRTUAL_PORT=8080
+      # - VIRTUAL_PORT=8080
       - VIRTUAL_HOST=${WORKSPACE_NAME}.${DEFAULT_HOST}
       - LETSENCRYPT_HOST=${WORKSPACE_NAME}.${DEFAULT_HOST}
       - PASSWORD=${PASSWORD}
       - SHELL=/bin/bash
+      - DOCKER_HOST=tcp://dind-${WORKSPACE_NAME}:2375
     expose:
       - '8080'
     restart: always
-    volumes_from:
-      - dind
     volumes:
       - ${HOME}/${WORKSPACE_NAME}/.config:/home/coder/.config
       - ${HOME}/${WORKSPACE_NAME}/.ssh:/home/coder/.ssh
-      - ${HOME}/${WORKSPACE_NAME}/projects:/home/coder/project
-      - dsock:/var/run/
-      - pdocker:/usr/local/bin/docker
+      - ${HOME}/${WORKSPACE_NAME}/projects:/home/coder/projects
     user: "${CUID}:${CGID}"
     networks:
       - domain
+      - dind
+    depends_on: 
       - dind
 
 
@@ -79,8 +84,7 @@ volumes:
   html:
   dhparam:
   certs:
-  dsock:
-  pdocker:
+  dcerts:
 
 networks:
   domain:

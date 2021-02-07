@@ -34,4 +34,4 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | b
     nodepath=$(which node); sudo ln -s $nodepath /usr/bin/node
 
 RUN echo 'alias ll="ls -al"' >> ~/.bashrc
-ENTRYPOINT ["/usr/bin/entrypoint.sh", "--bind-addr", "0.0.0.0:8080", "."]
+ENTRYPOINT ["/usr/bin/entrypoint.sh", "--bind-addr", "0.0.0.0:80", "."]

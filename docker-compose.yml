@@ -13,7 +13,7 @@ services:
       - "443:443"
     volumes:
       - conf:/etc/nginx/conf.d
-      - /home/agenta228/vhost:/etc/nginx/vhost.d
+      - conf:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - dhparam:/etc/nginx/dhparam
       - certs:/etc/nginx/certs:ro
@@ -46,30 +46,29 @@ services:
     environment: 
       - DOCKER_TLS_CERTDIR=
     networks:
-      dind:
-        aliases: 
-          - dind-${WORKSPACE_NAME}
+      - dind
   workspace:
     build: ./code-server
     container_name: workspace-${WORKSPACE_NAME}
     env_file:
       - .env
-    ports: 
-      - '8080:8080'
     environment:
-      # - VIRTUAL_PORT=8080
+      - VIRTUAL_PORT=80
       - VIRTUAL_HOST=${WORKSPACE_NAME}.${DEFAULT_HOST}
       - LETSENCRYPT_HOST=${WORKSPACE_NAME}.${DEFAULT_HOST}
       - PASSWORD=${PASSWORD}
       - SHELL=/bin/bash
-      - DOCKER_HOST=tcp://dind-${WORKSPACE_NAME}:2375
-    expose:
-      - '8080'
+      - DOCKER_HOST=tcp://localhost:2375
     restart: always
+    expose: 
+      - 80
     volumes:
       - ${HOME}/${WORKSPACE_NAME}/.config:/home/coder/.config
       - ${HOME}/${WORKSPACE_NAME}/.ssh:/home/coder/.ssh
       - ${HOME}/${WORKSPACE_NAME}/projects:/home/coder/projects
+    ports: 
+      - 1000-2374
+      - 2376-10000
     user: "${CUID}:${CGID}"
     networks:
       - domain
@@ -84,7 +83,6 @@ volumes:
   html:
   dhparam:
   certs:
-  dcerts:
 
 networks:
   domain:

@@ -26,6 +26,10 @@ services:
     restart: always
     volumes:
       - ${HOME}/${WORKSPACE_NAME}/.config:/home/${USERNAME}/.config
-      - ${HOME}/${WORKSPACE_NAME}/.ssh:/home/${USERNAME}/.ssh
+      - ${HOME}/.ssh:/home/${USERNAME}/.ssh
       - ${HOME}/${WORKSPACE_NAME}/projects:/home/${USERNAME}/projects
+      - docker:/var/lib/docker
     user: ${CUID}:${CGID}
+
+volumes:
+  docker:

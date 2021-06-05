@@ -35,6 +35,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | b
 FROM install_node AS start
 ARG USERNAME
 USER $USERNAME
+RUN mkdir -p /home/$USERNAME/.local/share/code-server
 WORKDIR /home/$USERNAME/projects
 SHELL ["/bin/bash", "-c"]
 RUN echo 'alias ll="ls -al"' >> ~/.bashrc

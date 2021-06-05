@@ -31,7 +31,7 @@ services:
       - ${HOME}/${WORKSPACE_NAME}/projects:/home/${USERNAME}/projects
       - docker:/var/lib/docker
       - code-server:/home/${USERNAME}/.local/share/code-server
-    user: ${CUID}:${CGID}
+    user: "${CUID}:${CGID}"
 
 volumes:
   docker:

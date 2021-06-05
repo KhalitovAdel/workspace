@@ -11,7 +11,7 @@ ARG USE_MOBY="true"
 # Install needed packages and setup non-root user. Use a separate RUN statement to add your
 # own dependencies. A user of "automatic" attempts to reuse an user ID if one already exists.
 ARG USERNAME=coder
-ARG USER_UID=501
+ARG USER_UID=1000
 ARG USER_GID=1000
 COPY library-scripts/*.sh /tmp/library-scripts/
 RUN apt-get update \

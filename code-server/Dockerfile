@@ -40,4 +40,4 @@ WORKDIR /home/$USERNAME/projects
 SHELL ["/bin/bash", "-c"]
 RUN echo 'alias ll="ls -al"' >> ~/.bashrc
 ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
-CMD ["/usr/bin/entrypoint.sh", "--bind-addr", "0.0.0.0:8080", "."]
+CMD ["/usr/bin/entrypoint.sh", "--bind-addr", "0.0.0.0:80", "."]

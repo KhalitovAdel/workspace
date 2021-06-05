@@ -23,13 +23,16 @@ services:
     environment:
       - PASSWORD=${PASSWORD}
       - SHELL=/bin/bash
+      - DOCKER_USER=${USERNAME}
     restart: always
     volumes:
       - ${HOME}/${WORKSPACE_NAME}/.config:/home/${USERNAME}/.config
       - ${HOME}/.ssh:/home/${USERNAME}/.ssh
       - ${HOME}/${WORKSPACE_NAME}/projects:/home/${USERNAME}/projects
       - docker:/var/lib/docker
+      - code-server:/home/${USERNAME}/.local/share/code-server
     user: ${CUID}:${CGID}
 
 volumes:
   docker:
+  code-server:

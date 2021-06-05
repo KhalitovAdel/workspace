@@ -33,6 +33,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | b
     nodepath=$(which node); sudo ln -s $nodepath /usr/bin/node
 
 FROM install_node AS start
+WORKDIR ~/projects
 ARG USERNAME
 USER $USERNAME
 SHELL ["/bin/bash", "-c"]

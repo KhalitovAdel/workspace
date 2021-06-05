@@ -33,9 +33,9 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | b
     nodepath=$(which node); sudo ln -s $nodepath /usr/bin/node
 
 FROM install_node AS start
-WORKDIR ~/projects
-ARG USERNAME
 USER $USERNAME
+WORKDIR /home/$USERNAME/projects
+ARG USERNAME
 SHELL ["/bin/bash", "-c"]
 RUN echo 'alias ll="ls -al"' >> ~/.bashrc
 ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]

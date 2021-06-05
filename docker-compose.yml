@@ -5,13 +5,21 @@ services:
     build:
       context: ./code-server
       dockerfile: ./Dockerfile
+      args:
+        USERNAME: $USERNAME
+        USER_UID: $CUID
+        USER_GID: $CGID
+        NODE_VERSION: $NODE_VERSION
     container_name: workspace-${WORKSPACE_NAME}
     privileged: true
     env_file:
       - .env
     ports:
       - 8080:8080
-      - 8081:8081
+      - 3000:3000
+      - 4080:4080
+      - 4090:4090
+      - 27017:27017
     environment:
       - PASSWORD=${PASSWORD}
       - SHELL=/bin/bash
